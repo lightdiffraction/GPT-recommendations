@@ -8,16 +8,40 @@ from django.shortcuts import render
 from django.http import HttpRequest
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from .forms import NameForm
+from .forms import GPTForm
 
 def home(request):
     """Renders the home page."""
+    print("hello")
     assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = GPTForm(request.POST)
+
+
+        #LOGIC
+         
+        s =  int(form['genre'].value()) + int(form['question'].value())
+        
+        #END OF LOGIC
+
+
+        return render(
+        request,
+        'app/index.html',
+        {
+            'form': form,
+            'title':'GPT Music Result',
+            'entered': 'Genre: ' + form['genre'].value() + ', Question: ' + form['question'].value(), 
+            'sum': s,
+            'year':datetime.now().year,
+        })
+    form = GPTForm()
     return render(
         request,
         'app/index.html',
         {
-            'title':'Home Page',
+            'form': form,
+            'title':'GPT Music',
             'year':datetime.now().year,
         }
     )
@@ -60,14 +84,5 @@ def result(request):
         }
     )
 
-def get_request(request):
-    if request.method == 'POST':
-        return HttpResponseRedirect('/about/')
-
-    else:
-        form = HttpResponseRedirect('/about/')
-
-    return HttpResponseRedirect('/about/')
-
 def say_hello(request):
-    return HTTPResponse("Hello World")
+    return HttpResponseRedirect('/about/')

@@ -3,24 +3,17 @@
 {% block content %}
 
 <div class="jumbotron">
-    <h1>GPT Music</h1>
-    <h3 align="center">Welcome to GPT Music</h3>
-    <form action="/result/" method="POST">
+    <h1>{{title}}</h1>
+    <h3 align="left">Welcome to GPT Music</h3>
+    <form method="POST">
         {% csrf_token %}
-        Genre:
-        <br>
-        <input id="genre" type="text" name="genre" value="{{ current_genre }}">
-        <br>
-        Question:
-        <br>
-        <input id="question" type="text" name="question" value="{{ current_question }}">
-        <br>
-        <hr>
+        {{ form.as_p }}
         <input type="submit" value="OK">
     </form>
     <br>
     <hr>
-    <p>Result:{{result}}</p>
+    <p>You entered: {{entered}}</p>
+    <p>Sum: {{sum}}</p>
     <br>
     <hr>
 
