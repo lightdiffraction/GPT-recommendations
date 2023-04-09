@@ -8,6 +8,9 @@ from django.shortcuts import render
 from django.http import HttpRequest
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+
+from app.models import Query
+from app.models import QueryProcessor
 from .forms import GPTForm
 
 def home(request):
@@ -21,7 +24,8 @@ def home(request):
         #LOGIC
          
         s =  int(form['genre'].value()) + int(form['question'].value())
-        
+        query = Query(form['genre'].value(), int(form['question'].value()))
+        queryProcessor = QueryProcessor(query)
         #END OF LOGIC
 
 
