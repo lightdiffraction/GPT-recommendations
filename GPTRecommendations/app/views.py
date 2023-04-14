@@ -22,9 +22,7 @@ def home(request):
 
 
         #LOGIC
-         
-        #s =  int(form['genre'].value()) + int(form['question'].value())
-        query = Query(form['genre'].value(), (form['question'].value()))
+        query = Query(form['genre'].value(), (form['question'].value()), form['artist'].value())
         queryProcessor = QueryProcessor(query)
         QueryProcessor.process(queryProcessor)
         QueryProcessor.postRequest(queryProcessor)
@@ -38,7 +36,7 @@ def home(request):
         {
             'form': form,
             'title':'GPT Music Result',
-            'entered': 'Genre: ' + form['genre'].value() + ', Question: ' + form['question'].value(), 
+            'entered': 'Genre: ' + form['genre'].value() + ', Question: ' + form['question'].value() + ', Artist: ' +  form['artist'].value(), 
             'sum': s,
             'year':datetime.now().year,
         })

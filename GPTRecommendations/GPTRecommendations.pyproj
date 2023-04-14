@@ -5,6 +5,8 @@
     <Name>GPTRecommendations</Name>
     <RootNamespace>GPTRecommendations</RootNamespace>
     <TestFramework>Pytest</TestFramework>
+    <InterpreterId>
+    </InterpreterId>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
