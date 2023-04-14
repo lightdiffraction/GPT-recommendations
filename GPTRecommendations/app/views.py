@@ -23,9 +23,12 @@ def home(request):
 
         #LOGIC
          
-        s =  int(form['genre'].value()) + int(form['question'].value())
-        query = Query(form['genre'].value(), int(form['question'].value()))
+        #s =  int(form['genre'].value()) + int(form['question'].value())
+        query = Query(form['genre'].value(), (form['question'].value()))
         queryProcessor = QueryProcessor(query)
+        QueryProcessor.process(queryProcessor)
+        QueryProcessor.postRequest(queryProcessor)
+        s = queryProcessor.answer
         #END OF LOGIC
 
 
