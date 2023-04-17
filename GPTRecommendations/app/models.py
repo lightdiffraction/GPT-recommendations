@@ -3,7 +3,7 @@ from urllib import response
 import openai
 openai.organization = "org-pbKlOp3rGztChAWCyGgJjxSQ"
 #openai.api_key = os.getenv("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")
-openai.api_key = "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"
+openai.api_key = "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"
 openai.Model.list()
 
 """
@@ -32,7 +32,14 @@ class QueryProcessor():
 
     def process(self):
 
-        self.prompt = 'Can you please recommend music of the following genre: "' + str(self.query.genre) + '" with the following description: "' + str(self.query.question) + '"' + 'by' + str(self.query.artist)
+        if (self.query.artist != None and self.query.genre != None):
+            self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + 'and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 10 rows.'
+        elif (self.query.artist == None and self.query.genre != None):
+             self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 10 rows.'
+        elif (self.query.artist != None and self.query.genre == None):
+             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + 'and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 10 rows.'
+        elif (self.query.artist == None and self.query.genre == None):
+             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 10 rows.'
 
     def postRequest(self):
         self.response = openai.ChatCompletion.create(
@@ -42,6 +49,6 @@ class QueryProcessor():
                 {"role": "user", "content": self.prompt}
                 ], 
             temperature = 0.9, 
-            max_tokens = 200
+            max_tokens = 400
             )
         self.answer = self.response['choices'][0]['message']['content']
