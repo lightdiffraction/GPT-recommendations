@@ -27,6 +27,7 @@ def home(request):
         QueryProcessor.process(queryProcessor)
         QueryProcessor.postRequest(queryProcessor)
         s = queryProcessor.answer
+        QueryProcessor.parseRequest(queryProcessor)
         #END OF LOGIC
 
 
