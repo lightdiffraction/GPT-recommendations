@@ -1,9 +1,16 @@
 import os
+
 from urllib import response
 import openai
 openai.organization = "org-pbKlOp3rGztChAWCyGgJjxSQ"
-#openai.api_key = os.getenv("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")
-openai.api_key = "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"
+
+from configparser import ConfigParser
+config = ConfigParser()
+configFilePath = os.path.join(os.path.dirname(__file__), 'auth.ini');
+config.sections()
+config.read(configFilePath)
+YOUR_API_KEY = config.get('auth', 'API_KEY')
+openai.api_key = YOUR_API_KEY
 openai.Model.list()
 
 """

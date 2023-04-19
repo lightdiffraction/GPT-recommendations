@@ -58,6 +58,8 @@
     <Folder Include="GPTRecommendations\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\auth.ini" />
+    <Content Include="app\ignore.gitignore" />
     <Content Include="app\templates\app\result.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
