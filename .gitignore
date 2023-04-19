@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Configuration file
+GPTRecommendations/app/auth.ini
+
+# Environment folder
+
+GPTRecommendations/env/
+/GPTRecommendations/app/auth.ini
