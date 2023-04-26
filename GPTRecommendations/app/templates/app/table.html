@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      // Creating a table
+      document.write("<table>");
+      
+      // Headlines of columns
+      let h = ["№", "Title", "Composer", "Link"];
+      
+      // Table header cells
+      document.write("<tr>");
+      for (var i = 1; i <= 4; i++) {
+        document.write("<th align='center'>" + h[i-1] + "</th>");
+      }
+      document.write("</tr>");
+      
+      // The rest of the cells contain their position in the table for now
+      for (var i = 1; i <= 10; i++) {
+        document.write("<tr>");
+        for (var j = 1; j <= 4; j++) {
+          document.write("<td align='center'>" + i + "," + j + "</td>");
+        }
+        document.write("</tr>");
+      }
+      document.write("</table>");
+    </script>
+  </body>
+</html>
