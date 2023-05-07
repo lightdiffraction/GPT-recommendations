@@ -49,13 +49,13 @@ class QueryProcessor():
     def process(self):
 
         if (self.query.artist != None and self.query.genre != None):
-            self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows.'
+            self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
         elif (self.query.artist == None and self.query.genre != None):
-             self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows.'
+             self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
         elif (self.query.artist != None and self.query.genre == None):
-             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows.'
+             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
         elif (self.query.artist == None and self.query.genre == None):
-             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows.'
+             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
 
     def postRequest(self):
         self.response = openai.ChatCompletion.create(
@@ -65,17 +65,23 @@ class QueryProcessor():
                 {"role": "user", "content": self.prompt}
                 ], 
             temperature = 0.9, 
-            max_tokens = 400
+            max_tokens = 1000
             )
         self.answer = self.response['choices'][0]['message']['content']
 
     def parseRequest(self):
         self.table = []
-        for i in range (1, 9):
-            musicstart = self.answer.find(str(i)+'.1')
-            musicend = self.answer.find(str(i)+'.2')
-            if (i != 9):
-                artistend = self.answer.find(str(i+1)+'.1')
-            else:
-                artistend = len(self.answer)-1
-            self.table.append(Music(self.answer[musicstart:musicend], self.answer[musicend:artistend]))
+        if (self.answer.find("TABLE") == -1):
+            self.table = [Music ('', ''), Music ('', ''), Music ('', ''), Music ('', ''), Music ('', ''), Music ('', ''), Music ('', ''), Music ('', ''), Music ('', '')]
+        else:
+            for i in range (1, 10):
+                musicstart = self.answer.find(str(i)+'.1')
+                musicend = self.answer.find(str(i)+'.2')
+                if (i != 9):
+                    artistend = self.answer.find(str(i+1)+'.1')
+                else:
+                    artistend = len(self.answer)
+                self.table.append(Music(self.answer[musicstart:musicend], self.answer[musicend:artistend]))
+
+       
+            self.answer = "Music recommended successfully."

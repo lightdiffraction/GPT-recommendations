@@ -9,6 +9,16 @@ body {
     padding-right: 15px;
 }
 
+th {
+    width: 500px;
+}
+
+tr {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: darkgray;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
