@@ -11,5 +11,12 @@
       "dest": "GPTRecommendations/wsgi.py"
     }
   ],
-  "outputDirectory": ""
+  "outputDirectory": "/(.*)",
+
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
