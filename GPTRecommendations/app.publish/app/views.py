@@ -12,7 +12,9 @@ from django.shortcuts import render
 from app.models import Query
 from app.models import QueryProcessor
 from .forms import GPTForm
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def home(request):
     """Renders the home page."""
     print("hello")
@@ -77,6 +79,7 @@ def home(request):
         }
     )
 
+@csrf_exempt
 def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
@@ -90,6 +93,7 @@ def contact(request):
         }
     )
 
+@csrf_exempt
 def about(request):
     """Renders the about page."""
     assert isinstance(request, HttpRequest)
@@ -103,6 +107,7 @@ def about(request):
         }
     )
 
+@csrf_exempt
 def result(request):
     """Renders the result page."""
     assert isinstance(request, HttpRequest)
@@ -115,5 +120,6 @@ def result(request):
         }
     )
 
+@csrf_exempt
 def say_hello(request):
     return HttpResponseRedirect('/about/')

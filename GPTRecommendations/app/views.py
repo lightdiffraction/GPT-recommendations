@@ -3,6 +3,7 @@ Definition of views.
 """
 
 from datetime import datetime
+from email import message
 from http.client import HTTPResponse
 from django.shortcuts import render
 from django.http import HttpRequest
@@ -12,11 +13,16 @@ from django.shortcuts import render
 from app.models import Query
 from app.models import QueryProcessor
 from .forms import GPTForm
+from .models import TrackVisits
+
 
 def home(request):
     """Renders the home page."""
     print("hello")
     assert isinstance(request, HttpRequest)
+    t = TrackVisits() 
+    #message = f'{t.get_hit_count()} users have already used our site'
+    message = ''
     if request.method == 'POST':
         form = GPTForm(request.POST)
 
@@ -71,6 +77,7 @@ def home(request):
         request,
         'app/index.html',
         {
+            'message': message,
             'form': form,
             'title':'GPT Music',
             'year':datetime.now().year,
@@ -113,6 +120,16 @@ def result(request):
             'title':'Result',
             'message':'GPT Recommends:',
         }
+    )
+
+def display_text(request):
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/index.html',
+        {
+            'message': f'{TrackVisits.get_hit_count()} users have already used our site'
+        } 
     )
 
 def say_hello(request):

@@ -1,9 +1,9 @@
 import os
 
 from urllib import response
+from hitcount.models import HitCountMixin, HitCount
 import openai
 openai.organization = "org-pbKlOp3rGztChAWCyGgJjxSQ"
-
 from configparser import ConfigParser
 config = ConfigParser()
 configFilePath = os.path.join(os.path.dirname(__file__), 'auth.ini');
@@ -12,6 +12,7 @@ config.read(configFilePath)
 YOUR_API_KEY = config.get('auth', 'API_KEY')
 openai.api_key = YOUR_API_KEY
 openai.Model.list()
+
 
 """
 Definition of models.
@@ -48,15 +49,26 @@ class QueryProcessor():
 
     def process(self):
 
-        if (self.query.artist != None and self.query.genre != None):
-            self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
-        elif (self.query.artist == None and self.query.genre != None):
-             self.prompt = '###Instruction### Recommend music in the'+ str(self.query.genre) +' genre that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
-        elif (self.query.artist != None and self.query.genre == None):
-             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + ' and is made by' + str(self.query.artist) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
-        elif (self.query.artist == None and self.query.genre == None):
-             self.prompt = '###Instruction### Recommend music that suits the description' + str(self.query.question) + '. Format the result as a table such as "TABLE: 1.1. first music name 1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. The table should have 9 rows. If you cannot recommend any music, print "ERROR"'
-
+        if (self.query.artist != '' and self.query.genre != ''):
+            self.prompt = f"""Recommend music in the {str(self.query.genre)} genre that suits the description {str(self.query.question)} and is made by artists similar to {str(self.query.artist)}. 
+            Format the result as a table such as "TABLE: 1.1. first music name  1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. 
+            Always include the indexes of the names and artists (1.1, 1.2 etc.). Do not include any additional symbols.
+            The table should have 9 rows. It should include at least one rare or unpopular composition and several different artists."""
+        elif (self.query.artist == '' and self.query.genre != ''):
+            self.prompt =  f"""Recommend music in the {str(self.query.genre)} genre that fits the description {str(self.query.question)}.
+            Format the result as a table such as "TABLE: 1.1. first music name  1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc.
+            Always include the indexes of the names and artists (1.1, 1.2 etc.). Do not include any additional symbols.
+            The table should have 9 rows. It should include at least one rare or unpopular composition and several different artists."""        
+        elif (self.query.artist != '' and self.query.genre == ''):
+            self.prompt =  f"""Recommend music that suits the description {str(self.query.question)} and is made by artists similar to {str(self.query.artist)}. 
+             Format the result as a table such as "TABLE: 1.1. first music name  1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. 
+             Always include the indexes of the names and artists (1.1, 1.2 etc.). Do not include any additional symbols.
+            The table should have 9 rows. It should include at least one rare or unpopular composition and several different artists."""
+        elif (self.query.artist == '' and self.query.genre == ''):
+            self.prompt = f"""Recommend music that suits the description {str(self.query.question)}.
+            Format the result as a table such as "TABLE: 1.1. first music name  1.2. first music artist name 2.1. second music name 2.2. second music artist name" etc. 
+            Always include the indexes of the names and artists (1.1, 1.2 etc.). Do not include any additional symbols.
+            The table should have 9 rows. It should include at least one rare or unpopular composition and several different artists."""
     def postRequest(self):
         self.response = openai.ChatCompletion.create(
             model = "gpt-3.5-turbo", 
@@ -85,3 +97,10 @@ class QueryProcessor():
 
        
             self.answer = "Music recommended successfully."
+
+class TrackVisits(HitCountMixin, models.Model):
+
+    # method to get an amount of visits
+    def get_hit_count(self):
+        hit_count = HitCount.objects.get_for_object(self)
+        return hit_count.hits

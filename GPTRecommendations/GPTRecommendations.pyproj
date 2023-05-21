@@ -59,10 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\auth.ini" />
-    <Content Include="app\static\app\my_template.html">
+    <Content Include="app\templates\app\result.html" />
+    <Content Include="app\templates\app\template_visits.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="app\templates\app\result.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\static\app\content\bootstrap.css" />

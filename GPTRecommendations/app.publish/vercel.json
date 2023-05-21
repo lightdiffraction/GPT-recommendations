@@ -1,0 +1,21 @@
+{
+  "builds": [
+    {
+      "src": "GPTRecommendations/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "GPTRecommendations/wsgi.py"
+    }
+  ],
+
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
