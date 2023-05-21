@@ -97,10 +97,11 @@ def say_hello(request):
 
 def display_text(request):
     assert isinstance(request, HttpRequest)
+    t = TrackVisits()
     return render(
         request,
         'app/index.html',
         {
-            'message': f'{TrackVisits.get_hit_count()} users have already used our site'
+            'message': f'{t.get_hit_count()} users have already used our site'
         } 
     )
