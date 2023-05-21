@@ -13,6 +13,8 @@ from app.models import Query
 from app.models import QueryProcessor
 from .forms import GPTForm
 
+from models import TrackVisits
+
 def home(request):
     """Renders the home page."""
     print("hello")
@@ -92,3 +94,13 @@ def result(request):
 
 def say_hello(request):
     return HttpResponseRedirect('/about/')
+
+def display_text(request):
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/index.html',
+        {
+            'message': f'{TrackVisits.get_hit_count()} users have already used our site'
+        } 
+    )
